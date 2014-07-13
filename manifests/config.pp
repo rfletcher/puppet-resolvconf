@@ -34,6 +34,12 @@ class resolvconf::config(
     default     => '../run/resolvconf/resolv.conf',
   }
 
+  if $override_dhcp or ($::dhcp_domain == '') {
+    $search_domains = $search
+  } else {
+    $search_domains = flatten([$search, $::dhcp_domain])
+  }
+
   file { '/etc/resolv.conf':
     ensure => link,
     target => $resolv_conf_target,
